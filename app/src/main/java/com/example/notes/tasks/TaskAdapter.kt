@@ -1,16 +1,20 @@
 package com.example.notes.tasks
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notes.R
 import com.example.notes.foundations.BaseRecyclerAdapter
 import com.example.notes.models.Task
+import com.example.notes.views.TaskView
+import com.example.notes.views.TodoView
 import kotlinx.android.synthetic.main.item_task.view.*
 import kotlinx.android.synthetic.main.view_todo.view.*
 
-class TaskAdapater(
+class TaskAdapter(
     taskList: MutableList<Task> = mutableListOf()
 ) : BaseRecyclerAdapter<Task>(taskList) {
 
@@ -19,15 +23,7 @@ class TaskAdapater(
 
     class ViewHolder(view: View) : BaseRecyclerAdapter.ViewHolder<Task>(view) {
         override fun onBind(data: Task) {
-            view.titleView.text = data.title
-
-            data.todos.forEach{todo ->
-                val todoView = LayoutInflater.from(view.context).inflate(R.layout.view_todo, view.todoContainer, false).apply {
-                    descriptionView.text = todo.description
-                    completeCheckBox.isChecked = todo.isComplete
-                }
-                view.todoContainer.addView(todoView)
-            }
+            (view as TaskView).initView(data)
         }
     }
 }

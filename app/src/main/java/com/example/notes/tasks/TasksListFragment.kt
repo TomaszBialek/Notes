@@ -29,7 +29,7 @@ class TasksListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TaskAdapater(
+        val adapter = TaskAdapter(
             mutableListOf(
                 Task("malaislicznazielonakuleczkatoczysiezgorki", mutableListOf(
                     Todo("Test One", true),
