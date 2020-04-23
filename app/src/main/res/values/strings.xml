@@ -8,4 +8,7 @@
     <string name="title_task">Tasks</string>
     <string name="title_note">Note</string>
 
+    <string name="add_button_task">Add new Task</string>
+    <string name="add_button_note">Add new Note</string>
+
 </resources>
