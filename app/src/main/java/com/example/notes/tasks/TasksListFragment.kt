@@ -1,5 +1,6 @@
 package com.example.notes.tasks
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +13,21 @@ import com.example.notes.models.Todo
 import kotlinx.android.synthetic.main.fragment_tasks_list.*
 
 class TasksListFragment : Fragment() {
+
+    lateinit var touchActionDelegate: TouchActionDelegate
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.let {
+            if (it is TouchActionDelegate) {
+                touchActionDelegate = it
+            }
         }
     }
 
@@ -36,7 +49,8 @@ class TasksListFragment : Fragment() {
                     Todo("Test Two")
                 )),
                 Task("patrzyochoczonawszystkocojestnadole")
-            )
+            ),
+            touchActionDelegate
         )
         recyclerView.adapter = adapter
     }
@@ -49,5 +63,9 @@ class TasksListFragment : Fragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    interface TouchActionDelegate {
+        fun onAddButtonClicked(value: String)
     }
 }

@@ -1,5 +1,6 @@
 package com.example.notes.notes
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +10,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notes.R
 import com.example.notes.models.Note
+import com.example.notes.tasks.TasksListFragment
 import kotlinx.android.synthetic.main.fragment_note_list.*
 import kotlinx.android.synthetic.main.fragment_tasks_list.*
 import kotlinx.android.synthetic.main.fragment_tasks_list.recyclerView
 
 class NoteListFragment : Fragment() {
+
+    lateinit var touchActionDelegate: TouchActionDelegate
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.let {
+            if (it is TouchActionDelegate) {
+                touchActionDelegate = it
+            }
         }
     }
 
@@ -35,7 +49,9 @@ class NoteListFragment : Fragment() {
             mutableListOf(
                 Note("atosechcialemwymysliccostakiegotomam"),
                 Note("jednakulkajestniebieskadrugarozowaobiesamale")
-        ))
+            ),
+            touchActionDelegate
+        )
         recyclerView.adapter = adapter
     }
 
@@ -47,4 +63,10 @@ class NoteListFragment : Fragment() {
             return fragment
         }
     }
+
+
+    interface TouchActionDelegate {
+        fun onAddButtonClicked(value: String)
+    }
+
 }
