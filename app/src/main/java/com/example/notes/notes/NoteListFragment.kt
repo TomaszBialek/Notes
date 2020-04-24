@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notes.R
@@ -17,7 +19,9 @@ import kotlinx.android.synthetic.main.fragment_tasks_list.recyclerView
 
 class NoteListFragment : Fragment() {
 
+    lateinit var viewModel: NoteViewModel
     lateinit var touchActionDelegate: TouchActionDelegate
+    lateinit var adapter: NoteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,14 +49,18 @@ class NoteListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = NoteAdapter(
-            mutableListOf(
-                Note("atosechcialemwymysliccostakiegotomam"),
-                Note("jednakulkajestniebieskadrugarozowaobiesamale")
-            ),
-            touchActionDelegate
-        )
+        adapter = NoteAdapter(touchActionDelegate = touchActionDelegate)
         recyclerView.adapter = adapter
+
+        bindViewModel()
+    }
+
+    fun bindViewModel() {
+        viewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
+
+        viewModel.noteListLiveData.observe(viewLifecycleOwner, Observer { noteList ->
+            adapter.updateList(noteList)
+        })
     }
 
     companion object {

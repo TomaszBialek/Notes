@@ -6,21 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notes.R
-import com.example.notes.models.Task
-import com.example.notes.models.Todo
 import kotlinx.android.synthetic.main.fragment_tasks_list.*
 
 class TasksListFragment : Fragment() {
 
+    lateinit var viewModel: TaskViewModel
+    lateinit var adapter: TaskAdapter
     lateinit var touchActionDelegate: TouchActionDelegate
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-        }
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -42,17 +38,17 @@ class TasksListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TaskAdapter(
-            mutableListOf(
-                Task("malaislicznazielonakuleczkatoczysiezgorki", mutableListOf(
-                    Todo("Test One", true),
-                    Todo("Test Two")
-                )),
-                Task("patrzyochoczonawszystkocojestnadole")
-            ),
-            touchActionDelegate
-        )
+        adapter = TaskAdapter(touchActionDelegate = touchActionDelegate)
         recyclerView.adapter = adapter
+
+        bindViewModel()
+    }
+
+    private fun bindViewModel() {
+        viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
+        viewModel.taskListLiveData.observe(viewLifecycleOwner, Observer{ taskList ->
+            adapter.updateList(taskList)
+        })
     }
 
 
