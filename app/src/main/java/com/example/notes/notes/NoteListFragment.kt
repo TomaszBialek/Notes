@@ -20,8 +20,8 @@ import kotlinx.android.synthetic.main.fragment_tasks_list.recyclerView
 class NoteListFragment : Fragment() {
 
     lateinit var viewModel: NoteViewModel
+    lateinit var contentView: NoteListView
     lateinit var touchActionDelegate: TouchActionDelegate
-    lateinit var adapter: NoteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,24 +42,26 @@ class NoteListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_note_list, container, false)
+        return inflater.inflate(R.layout.fragment_note_list, container, false).apply {
+            contentView = this as NoteListView
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = NoteAdapter(touchActionDelegate = touchActionDelegate)
-        recyclerView.adapter = adapter
-
         bindViewModel()
+        setContentView()
+    }
+
+    private fun setContentView() {
+        contentView.initView(touchActionDelegate, viewModel)
     }
 
     fun bindViewModel() {
         viewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
 
         viewModel.noteListLiveData.observe(viewLifecycleOwner, Observer { noteList ->
-            adapter.updateList(noteList)
+            contentView.updateList(noteList)
         })
     }
 
