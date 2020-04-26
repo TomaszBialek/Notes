@@ -11,7 +11,8 @@ import com.example.notes.tasks.TasksListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_navigation.*
 
-class NavigationActivity : AppCompatActivity(R.layout.activity_navigation), TasksListFragment.TouchActionDelegate, NoteListFragment.TouchActionDelegate {
+class NavigationActivity : AppCompatActivity(R.layout.activity_navigation),
+    TasksListFragment.TouchActionDelegate, NoteListFragment.TouchActionDelegate {
 
     private var mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->

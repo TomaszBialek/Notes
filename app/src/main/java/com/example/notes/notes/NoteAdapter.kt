@@ -15,11 +15,16 @@ class NoteAdapter(
     val touchActionDelegate: NoteListFragment.TouchActionDelegate
 ) : BaseRecyclerAdapter<Note>(notes) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = if(viewType == TYPE_ADD_BUTTON) {
-        AddButtonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_add_button, parent, false))
-    } else {
-        NoteViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        if (viewType == TYPE_ADD_BUTTON) {
+            AddButtonViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.view_add_button, parent, false)
+            )
+        } else {
+            NoteViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false)
+            )
+        }
 
     class NoteViewHolder(view: View) : BaseViewHolder<Note>(view) {
         override fun onBind(data: Note, listIndex: Int) {
@@ -27,7 +32,7 @@ class NoteAdapter(
         }
     }
 
-    inner class AddButtonViewHolder(view: View): BaseRecyclerAdapter.AddButtonViewHolder(view) {
+    inner class AddButtonViewHolder(view: View) : BaseRecyclerAdapter.AddButtonViewHolder(view) {
         override fun onBind(data: Unit, listIndex: Int) {
             view.buttonText.text = view.context.getText(R.string.add_button_note)
 

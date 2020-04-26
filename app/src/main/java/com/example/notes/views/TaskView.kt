@@ -24,7 +24,7 @@ class TaskView @JvmOverloads constructor(
         task.todos.forEachIndexed { todoIndex, todo ->
             val todoView = (LayoutInflater.from(context)
                 .inflate(R.layout.view_todo, todoContainer, false) as TodoView).apply {
-                initView(todo) {isChecked ->
+                initView(todo) { isChecked ->
 
                     todoCheckedCallback.invoke(todoIndex, isChecked)
 

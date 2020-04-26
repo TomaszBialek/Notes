@@ -11,18 +11,24 @@ class TaskListView @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 1
-): ConstraintLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     lateinit var adapter: TaskAdapter
     private lateinit var touchActionDelegate: TasksListFragment.TouchActionDelegate
     private lateinit var dataActionDelegate: TaskListViewContract
 
-    fun initView(taDelegate: TasksListFragment.TouchActionDelegate, daDelegate: TaskListViewContract) {
+    fun initView(
+        taDelegate: TasksListFragment.TouchActionDelegate,
+        daDelegate: TaskListViewContract
+    ) {
         setDelegates(taDelegate, daDelegate)
         setUpView()
     }
 
-    private fun setDelegates(taDelegate: TasksListFragment.TouchActionDelegate, daDelegate: TaskListViewContract) {
+    private fun setDelegates(
+        taDelegate: TasksListFragment.TouchActionDelegate,
+        daDelegate: TaskListViewContract
+    ) {
         touchActionDelegate = taDelegate
         dataActionDelegate = daDelegate
     }

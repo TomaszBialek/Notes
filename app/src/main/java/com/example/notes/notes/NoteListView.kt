@@ -17,12 +17,18 @@ class NoteListView @JvmOverloads constructor(
     private lateinit var touchActionDelegate: NoteListFragment.TouchActionDelegate
     private lateinit var dataActionDelegate: NoteListViewContract
 
-    fun initView(taDelegate: NoteListFragment.TouchActionDelegate, daDelegate: NoteListViewContract) {
+    fun initView(
+        taDelegate: NoteListFragment.TouchActionDelegate,
+        daDelegate: NoteListViewContract
+    ) {
         setUpDelegates(taDelegate, daDelegate)
         setUpView()
     }
 
-    private fun setUpDelegates(taDelegate: NoteListFragment.TouchActionDelegate, daDelegate: NoteListViewContract) {
+    private fun setUpDelegates(
+        taDelegate: NoteListFragment.TouchActionDelegate,
+        daDelegate: NoteListViewContract
+    ) {
         touchActionDelegate = taDelegate
         dataActionDelegate = daDelegate
     }

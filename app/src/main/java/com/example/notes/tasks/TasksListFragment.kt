@@ -18,7 +18,7 @@ class TasksListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        context.let {1
+        context.let {
             if (it is TouchActionDelegate) {
                 touchActionDelegate = it
             }
@@ -46,7 +46,7 @@ class TasksListFragment : Fragment() {
 
     private fun bindViewModel() {
         viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-        viewModel.taskListLiveData.observe(viewLifecycleOwner, Observer{ taskList ->
+        viewModel.taskListLiveData.observe(viewLifecycleOwner, Observer { taskList ->
             contentView.updateList(taskList)
         })
     }

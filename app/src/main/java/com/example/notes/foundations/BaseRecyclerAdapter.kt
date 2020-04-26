@@ -7,7 +7,7 @@ abstract class BaseRecyclerAdapter<T>(
     protected val masterList: MutableList<T> = mutableListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    fun updateList(list: List<T>){
+    fun updateList(list: List<T>) {
         masterList.clear()
         masterList.addAll(list)
         notifyDataSetChanged()
@@ -30,7 +30,7 @@ abstract class BaseRecyclerAdapter<T>(
     }
 
     abstract class BaseViewHolder<E>(val view: View) : RecyclerView.ViewHolder(view) {
-        abstract fun onBind(data : E, listIndex: Int)
+        abstract fun onBind(data: E, listIndex: Int)
     }
 
     abstract class AddButtonViewHolder(view: View) : BaseViewHolder<Unit>(view)
