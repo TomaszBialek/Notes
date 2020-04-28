@@ -2,8 +2,10 @@ package com.example.notes.tasks
 
 import com.example.notes.models.Task
 import com.example.notes.models.Todo
+import javax.inject.Inject
 
-class TaskModel {
+
+class TaskModel @Inject constructor(){
 
     fun getFakeData(): MutableList<Task> = mutableListOf(
         Task(
