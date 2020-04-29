@@ -10,5 +10,9 @@
 
     <string name="add_button_task">Add new Task</string>
     <string name="add_button_note">Add new Note</string>
+    <string name="title_save">Save</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
