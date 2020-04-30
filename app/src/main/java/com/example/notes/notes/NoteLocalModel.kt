@@ -1,5 +1,6 @@
 package com.example.notes.notes
 
+import android.util.Log
 import com.example.notes.models.Note
 import javax.inject.Inject
 
@@ -11,7 +12,8 @@ class NoteLocalModel @Inject constructor() : INoteModel {
     )
 
     override fun addNote(note: Note, callback: SuccessCallback) {
-        TODO("Not yet implemented")
+        Log.d("NoteLocalModel", note.toString())
+        callback.invoke(true)
     }
 
     override fun updateNote(note: Note, callback: SuccessCallback) {
