@@ -21,6 +21,8 @@ import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.fragment_create_task.*
 import kotlinx.android.synthetic.main.view_create_task.view.*
 import kotlinx.android.synthetic.main.view_create_todo.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import toothpick.Toothpick
 import java.lang.RuntimeException
 import javax.inject.Inject
@@ -96,11 +98,13 @@ class CreateTaskFragment : Fragment() {
     private fun isTaskEmpty(): Boolean = createTaskView.taskEditText.editableText.isNullOrEmpty()
 
     fun saveTask(callback: (Boolean) -> Unit) {
-        createTask()?.let { task ->
-            model.addTask(task) { success ->
-                callback.invoke(success)
-            }
-        } ?: callback.invoke(false)
+        GlobalScope.launch {
+            createTask()?.let { task ->
+                model.addTask(task) { success ->
+                    callback.invoke(success)
+                }
+            } ?: callback.invoke(false)
+        }
     }
 
     fun createTask(): Task? {
@@ -108,7 +112,7 @@ class CreateTaskFragment : Fragment() {
             containerView.run {
 
                 var taskField: String? = null
-                var todoList: MutableList<Todo> = mutableListOf()
+                val todoList: MutableList<Todo> = mutableListOf()
                 for (i in 0 until containerView.childCount) {
                     if (i == 0) {
                         taskField = containerView.getChildAt(i).taskEditText.editableText?.toString()
