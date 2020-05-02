@@ -5,11 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.notes.foundations.ApplicationScope
 import com.example.notes.models.Note
-import com.example.notes.models.Task
-import com.example.notes.tasks.ITaskModel
-import com.example.notes.tasks.SuccessCallback
 import toothpick.Toothpick
-import toothpick.config.Module
 import javax.inject.Inject
 
 class NoteViewModel : ViewModel(), NoteListViewContract {
@@ -26,12 +22,16 @@ class NoteViewModel : ViewModel(), NoteListViewContract {
     }
 
     fun loadData() {
-        _noteListLiveData.postValue(model.retrieveNotes())
+        model.retrieveNotes { nullableList ->
+            nullableList?.let {
+                _noteListLiveData.postValue(it)
+            }
+        }
     }
 
     override fun onDeleteNote(note: Note) {
         model.deleteNote(note) {
-            if(it) {
+            if (it) {
                 loadData()
             }
         }

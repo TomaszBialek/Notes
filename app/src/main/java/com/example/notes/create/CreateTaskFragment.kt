@@ -96,9 +96,9 @@ class CreateTaskFragment : Fragment() {
     private fun isTaskEmpty(): Boolean = createTaskView.taskEditText.editableText.isNullOrEmpty()
 
     fun saveTask(callback: (Boolean) -> Unit) {
-        createTask()?.let {
-            model.addTask(it) {
-                callback.invoke(true)
+        createTask()?.let { task ->
+            model.addTask(task) { success ->
+                callback.invoke(success)
             }
         } ?: callback.invoke(false)
     }
