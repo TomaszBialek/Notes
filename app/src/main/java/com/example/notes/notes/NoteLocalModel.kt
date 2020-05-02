@@ -12,11 +12,6 @@ class NoteLocalModel @Inject constructor() : INoteModel {
 
     override fun getFakeData(): MutableList<Note> = retrieveNotes().toMutableList()
 
-//        mutableListOf(
-//        Note(description = "atosechcialemwymysliccostakiegotomam"),
-//        Note(description = "jednakulkajestniebieskadrugarozowaobiesamale")
-//    )
-
     override fun addNote(note: Note, callback: SuccessCallback) {
         Log.d("NoteLocalModel", note.toString())
         databaseClient.noteDAO().addNote(note)
