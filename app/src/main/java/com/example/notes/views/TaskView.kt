@@ -1,7 +1,6 @@
 package com.example.notes.views
 
 import android.content.Context
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,27 +16,49 @@ class TaskView @JvmOverloads constructor(
 
     lateinit var task: Task
 
-    fun initView(task: Task, todoCheckedCallback: (Int, Boolean) -> Unit) {
-        this.task = task
-        titleView.text = task.title
+    fun initView(
+        task: Task,
+        todoCheckedCallback: (Int, Boolean) -> Unit,
+        deleteCallback: () -> Unit
+    ) {
+        resetChildViews()
 
+        this.task = task
+
+        initTaskLine(deleteCallback)
+        addChildViews(todoCheckedCallback)
+    }
+
+    private fun resetChildViews() {
+        todoContainer.removeAllViewsInLayout()
+    }
+
+    private fun initTaskLine(deleteCallback: () -> Unit) {
+        titleView.text = task.title
+        imageButton.setOnClickListener {
+            deleteCallback.invoke()
+        }
+    }
+
+    private fun addChildViews(todoCheckedCallback: (Int, Boolean) -> Unit) {
         task.todos.forEachIndexed { todoIndex, todo ->
             val todoView = (LayoutInflater.from(context)
-                .inflate(R.layout.view_todo, todoContainer, false) as TodoView).apply {
-                initView(todo) { isChecked ->
+                .inflate(R.layout.view_todo, todoContainer, false) as TodoView)
+                .apply {
+                    initView(todo) { isChecked ->
 
-                    todoCheckedCallback.invoke(todoIndex, isChecked)
+                        todoCheckedCallback.invoke(todoIndex, isChecked)
 
-                    if (isTaskComplete()) {
-                        this@TaskView.titleView.setStrikeThrough()
-                    } else {
-                        this@TaskView.titleView.removeStrikeThrough()
+                        if (isTaskComplete()) {
+                            this@TaskView.titleView.setStrikeThrough()
+                        } else {
+                            this@TaskView.titleView.removeStrikeThrough()
+                        }
                     }
                 }
-            }
             todoContainer.addView(todoView)
         }
     }
 
-    fun isTaskComplete(): Boolean = task.todos.none { !it.isComplete }
+    private fun isTaskComplete(): Boolean = task.todos.none { !it.isComplete }
 }

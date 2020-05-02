@@ -23,34 +23,33 @@ class TaskViewModel : ViewModel(), TaskListViewContract {
 //            bind(ITaskModel::class.java).toInstance(TestModel())
 //        })
         Toothpick.inject(this, ApplicationScope.scope)
-        _taskListLiveData.postValue(model.getFakeData())
+        loadData()
+    }
+
+    fun loadData() {
+        _taskListLiveData.postValue(model.retrieveTasks().toMutableList())
     }
 
     override fun onTodoUpdate(taskIndex: Int, toDoIndex: Int, isComplete: Boolean) {
-        _taskListLiveData.value?.get(taskIndex)?.todos?.get(toDoIndex)?.isComplete = isComplete
+        _taskListLiveData.value?.let {
+            val todo = it[taskIndex].todos[toDoIndex]
+            todo.apply {
+                this.isComplete = isComplete
+                this.taskId = it[taskIndex].uid
+            }
+
+            model.updateTodo(todo) {
+                loadData()
+            }
+        }
     }
 
-}
-
-
-class TestModel : ITaskModel {
-    override fun addTask(task: Task, callback: SuccessCallback) {
-        TODO("Not yet implemented")
+    override fun onTaskDeleted(taskIndex: Int) {
+        _taskListLiveData.value?.let {
+            model.deleteTask(it[taskIndex]) {
+                loadData()
+            }
+        }
     }
 
-    override fun updateTask(task: Task, callback: SuccessCallback) {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteTask(task: Task, callback: SuccessCallback) {
-        TODO("Not yet implemented")
-    }
-
-    override fun retrieveTasks(): List<Task> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getFakeData(): MutableList<Task> = mutableListOf(
-        Task("Test Model Task")
-    )
 }
