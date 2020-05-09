@@ -17,7 +17,7 @@ import com.example.notes.models.Todo
 import com.example.notes.tasks.ITaskModel
 import com.example.notes.tasks.TaskLocalModel
 import com.example.notes.views.CreateTodoView
-import kotlinx.android.synthetic.main.activity_navigation.*
+import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_create_task.*
 import kotlinx.android.synthetic.main.view_create_task.view.*
 import kotlinx.android.synthetic.main.view_create_todo.view.*

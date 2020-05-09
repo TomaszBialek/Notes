@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.example.notes.R
 import com.example.notes.foundations.BaseRecyclerAdapter
 import com.example.notes.models.Note
-import com.example.notes.navigation.NavigationActivity
+import com.example.notes.navigation.MainFragment
 import com.example.notes.views.NoteView
 import kotlinx.android.synthetic.main.view_add_button.view.*
 
@@ -40,7 +40,7 @@ class NoteAdapter(
             view.buttonText.text = view.context.getText(R.string.add_button_note)
 
             view.setOnClickListener {
-                touchActionDelegate.onAddButtonClicked(NavigationActivity.FRAGMENT_VALUE_NOTE)
+                touchActionDelegate.onAddButtonClicked(MainFragment.FRAGMENT_VALUE_NOTE)
             }
         }
     }

@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.notes.R
+import com.example.notes.notes.NoteListFragment
 
 class TasksListFragment : Fragment() {
 
@@ -18,11 +21,14 @@ class TasksListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        context.let {
-            if (it is TouchActionDelegate) {
-                touchActionDelegate = it
-            }
-        }
+        touchActionDelegate = parentFragmentManager.primaryNavigationFragment!!.childFragmentManager.fragments[0] as TouchActionDelegate
+//        context.let {
+////            findNavController().currentDestination
+////            parentFragmentManager.findFragmentById(R.id.container)
+//            if (it is TouchActionDelegate) {
+//                touchActionDelegate = it
+//            }
+//        }
     }
 
     override fun onCreateView(

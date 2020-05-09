@@ -2,16 +2,17 @@ package com.example.notes.navigation
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.notes.R
-import com.example.notes.create.CreateActivity
 import com.example.notes.notes.NoteListFragment
 import com.example.notes.tasks.TasksListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_navigation.*
+import kotlinx.android.synthetic.main.fragment_main.*
 
-class NavigationActivity : AppCompatActivity(R.layout.activity_navigation),
+class MainFragment : Fragment(R.layout.fragment_main),
     TasksListFragment.TouchActionDelegate, NoteListFragment.TouchActionDelegate {
 
     private var mOnNavigationItemSelectedListener =
@@ -29,21 +30,21 @@ class NavigationActivity : AppCompatActivity(R.layout.activity_navigation),
             false
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         replaceFragment(TasksListFragment.newInstance())
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
     private fun goToCreateActivity(fragmentValue: String) {
-        startActivity(Intent(this, CreateActivity::class.java).apply {
-            putExtra(FRAGMENT_TYPE_KEY, fragmentValue)
-        })
+//        startActivity(Intent(this, CreateActivity::class.java).apply {
+//            putExtra(FRAGMENT_TYPE_KEY, fragmentValue)
+//        })
     }
 
     private fun replaceFragment(fragment: Fragment) {
 
-        supportFragmentManager
+        requireActivity().supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentHolder, fragment)
             .commit()
