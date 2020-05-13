@@ -56,11 +56,12 @@ class CreateNoteFragment : Fragment(), NullFieldChecker {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
+        listener = parentFragmentManager.primaryNavigationFragment!!.childFragmentManager.fragments[0] as OnFragmentInteractionListener
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException("$context must implement OnFragmentInteractionListener")
+//        }
     }
 
     override fun onDetach() {

@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.notes.R
-import com.example.notes.navigation.MainFragment
+import com.example.notes.MainFragment
 
 class CreateFragment : Fragment(R.layout.fragment_create), CreateNoteFragment.OnFragmentInteractionListener, CreateTaskFragment.OnFragmentInteractionListener {
 
@@ -61,9 +61,11 @@ class CreateFragment : Fragment(R.layout.fragment_create), CreateNoteFragment.On
                     } else if (this is CreateNoteFragment) {
                         this.saveNote {success ->
                             if (success) {
-                                activity?.supportFinishAfterTransition()
+                                findNavController().popBackStack()
                             } else {
-                                Toast.makeText(context, getString(R.string.toast_error_saving), Toast.LENGTH_SHORT).show()
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(context, getString(R.string.toast_error_saving), Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }

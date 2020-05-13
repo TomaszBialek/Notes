@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.example.notes.R
 import com.example.notes.foundations.BaseRecyclerAdapter
 import com.example.notes.models.Note
-import com.example.notes.navigation.MainFragment
+import com.example.notes.MainFragment
 import com.example.notes.views.NoteView
 import kotlinx.android.synthetic.main.view_add_button.view.*
 

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.notes.R
 import com.example.notes.foundations.BaseRecyclerAdapter
 import com.example.notes.models.Task
-import com.example.notes.navigation.MainFragment
+import com.example.notes.MainFragment
 import com.example.notes.views.TaskView
 import kotlinx.android.synthetic.main.view_add_button.view.*
 
