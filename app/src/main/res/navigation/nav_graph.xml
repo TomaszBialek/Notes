@@ -10,13 +10,24 @@
         android:name="com.example.notes.navigation.MainFragment"
         android:label="activity_navigation"
         tools:layout="@layout/fragment_main" >
+
+        <argument android:name="f_t_k"
+            android:defaultValue="f_v_t"/>
+
         <action
             android:id="@+id/action_mainFragment_to_createFragment"
             app:destination="@id/createFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/createFragment"
         android:name="com.example.notes.create.CreateFragment"
         android:label="activity_create"
-        tools:layout="@layout/fragment_create" />
+        tools:layout="@layout/fragment_create">
+
+        <argument android:name="fragment_type_key"
+            android:defaultValue="f_v_t"/>
+
+    </fragment>
 </navigation>

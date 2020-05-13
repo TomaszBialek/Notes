@@ -5,7 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.notes.R
 import com.example.notes.notes.NoteListFragment
 import com.example.notes.tasks.TasksListFragment
@@ -14,6 +18,8 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment(R.layout.fragment_main),
     TasksListFragment.TouchActionDelegate, NoteListFragment.TouchActionDelegate {
+
+    lateinit var navController: NavController
 
     private var mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -32,11 +38,14 @@ class MainFragment : Fragment(R.layout.fragment_main),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         replaceFragment(TasksListFragment.newInstance())
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
     private fun goToCreateActivity(fragmentValue: String) {
+        val bundle = bundleOf(FRAGMENT_TYPE_KEY to fragmentValue)
+        navController.navigate(R.id.action_mainFragment_to_createFragment, bundle)
 //        startActivity(Intent(this, CreateActivity::class.java).apply {
 //            putExtra(FRAGMENT_TYPE_KEY, fragmentValue)
 //        })

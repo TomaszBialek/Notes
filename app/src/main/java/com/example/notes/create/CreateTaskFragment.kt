@@ -16,6 +16,7 @@ import com.example.notes.models.Task
 import com.example.notes.models.Todo
 import com.example.notes.tasks.ITaskModel
 import com.example.notes.tasks.TaskLocalModel
+import com.example.notes.tasks.TasksListFragment
 import com.example.notes.views.CreateTodoView
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_create_task.*
@@ -135,11 +136,12 @@ class CreateTaskFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
+        listener = parentFragmentManager.primaryNavigationFragment!!.childFragmentManager.fragments[0] as OnFragmentInteractionListener
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException("$context must implement OnFragmentInteractionListener")
+//        }
     }
 
     override fun onDetach() {
