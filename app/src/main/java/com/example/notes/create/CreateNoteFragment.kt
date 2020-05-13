@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.notes.R
 import com.example.notes.foundations.ApplicationScope
 import com.example.notes.foundations.NullFieldChecker
@@ -35,6 +36,11 @@ class CreateNoteFragment : Fragment(), NullFieldChecker {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_note, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("key", "backPressedNote")
     }
 
     fun saveNote(callback: (Boolean) -> Unit) {

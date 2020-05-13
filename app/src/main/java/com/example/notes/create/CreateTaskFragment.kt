@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 
 import com.example.notes.R
 import com.example.notes.foundations.ApplicationScope
@@ -52,6 +53,8 @@ class CreateTaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("key", "backPressedList")
 
         createTaskView.taskEditText.addTextChangedListener(object: StateChangeTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
