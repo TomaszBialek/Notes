@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.widget.CompoundButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.notes.models.Todo
-import kotlinx.android.synthetic.main.view_todo.view.*
+import kotlinx.android.synthetic.main.item_todo.view.*
 
 class TodoView @JvmOverloads constructor(
     context: Context,
