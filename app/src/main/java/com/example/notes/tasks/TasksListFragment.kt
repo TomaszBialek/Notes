@@ -21,7 +21,8 @@ class TasksListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        touchActionDelegate = parentFragmentManager.primaryNavigationFragment!!.childFragmentManager.fragments[0] as TouchActionDelegate
+
+
 //        context.let {
 ////            findNavController().currentDestination
 ////            parentFragmentManager.findFragmentById(R.id.container)
@@ -42,6 +43,7 @@ class TasksListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        touchActionDelegate = parentFragmentManager.primaryNavigationFragment!!.childFragmentManager.fragments[0] as TouchActionDelegate
         bindViewModel()
         setContentView()
     }

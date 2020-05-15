@@ -7,7 +7,7 @@
     tools:context=".create.CreateFragment">
 
     <FrameLayout
-        android:id="@+id/fragmentHolder2"
+        android:id="@+id/fragmentCreateHolder"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

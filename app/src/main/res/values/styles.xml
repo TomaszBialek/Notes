@@ -1,11 +1,53 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppThemeWhite" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionBarStyle">@color/primaryText</item>
+
+        <item name="primaryTextColor">@color/primaryText</item>
+        <item name="buttonColor">@color/colorPrimary</item>
+        <item name="navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="navigationBarSelectedItemColor">@color/black</item>
+        <item name="navigationBarNotSelectedItemColor">@color/white</item>
     </style>
+
+    <style name="AppThemeDark" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/mintColorPrimary</item>
+        <item name="colorPrimaryDark">@color/mintColorPrimaryDark</item>
+        <item name="colorAccent">@color/mintColorAccent</item>
+        <item name="android:actionBarStyle">@color/mintPrimaryText</item>
+
+        <item name="primaryTextColor">@color/mintPrimaryText</item>
+        <item name="buttonColor">@color/mintColorPrimary</item>
+        <item name="navigationBarColor">@color/mintColorPrimaryDark</item>
+        <item name="navigationBarSelectedItemColor">@color/black</item>
+        <item name="navigationBarNotSelectedItemColor">@color/white</item>
+    </style>
+
+<!--    &lt;!&ndash; Base application theme. &ndash;&gt;-->
+<!--    <style name="AppThemeDark" parent="Theme.AppCompat.Light.DarkActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--    </style>-->
+
+
+<!--    <style name="AppThemeRed" parent="Theme.MaterialComponents.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        &lt;!&ndash; Original AppCompat attributes. &ndash;&gt;-->
+<!--        <item name="colorPrimary">#f00</item>-->
+<!--        <item name="colorSecondary">@color/colorPrimaryDark</item>-->
+<!--        <item name="android:colorBackground">#fff</item>-->
+<!--        <item name="colorError">#f00</item>-->
+<!--        <item name="android:windowBackground">@android:color/white</item>-->
+
+<!--        &lt;!&ndash; New MaterialComponents attributes. &ndash;&gt;-->
+<!--        <item name="colorSurface">#fff</item>-->
+<!--    </style>-->
 
 </resources>

@@ -47,7 +47,7 @@ class CreateFragment : Fragment(R.layout.fragment_create), CreateNoteFragment.On
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.saveItem -> {
-                requireActivity().supportFragmentManager.findFragmentById(R.id.fragmentHolder2)?.run {
+                requireActivity().supportFragmentManager.findFragmentById(R.id.fragmentCreateHolder)?.run {
                     if (this is CreateTaskFragment) {
                         this.saveTask() {success ->
                             if (success) {
@@ -79,7 +79,7 @@ class CreateFragment : Fragment(R.layout.fragment_create), CreateNoteFragment.On
 //        requireActivity().supportFragmentManager.beginTransaction().replace(R.id.fragmentHolder, fragment).commit()
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragmentHolder2, fragment)
+            .replace(R.id.fragmentCreateHolder, fragment)
             .commit()
     }
 

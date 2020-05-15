@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="primaryTextColor" format="reference" />
+    <attr name="buttonColor" format="reference"/>
+    <attr name="navigationBarColor" format="reference"/>
+    <attr name="navigationBarSelectedItemColor" format="reference"/>
+    <attr name="navigationBarNotSelectedItemColor" format="reference"/>
+</resources>

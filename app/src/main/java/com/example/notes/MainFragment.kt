@@ -1,7 +1,7 @@
 package com.example.notes
 
 import android.os.Bundle
-import android.view.View
+import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -24,11 +24,11 @@ class MainFragment : Fragment(R.layout.fragment_main),
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_tasks -> {
-                    replaceFragment(TasksListFragment.newInstance())
+                    replaceFragment(TasksListFragment.newInstance(), "MainFragment")
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_notes -> {
-                    replaceFragment(NoteListFragment.newInstance())
+                    replaceFragment(NoteListFragment.newInstance(), "MainFragment")
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -47,7 +47,7 @@ class MainFragment : Fragment(R.layout.fragment_main),
 
         if (firstEnter)
         {
-            replaceFragment(TasksListFragment.newInstance())
+            replaceFragment(TasksListFragment.newInstance(), "MainFragment")
             firstEnter = false
         }
 
@@ -56,15 +56,39 @@ class MainFragment : Fragment(R.layout.fragment_main),
             if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains("key")) {
                 val result = navBackStackEntry.savedStateHandle.get<String>("key")
                 if (result == "backPressedNote") {
-                    replaceFragment(NoteListFragment.newInstance())
+                    replaceFragment(NoteListFragment.newInstance(), "MainFragment")
                 } else {
-                    replaceFragment(TasksListFragment.newInstance())
+                    replaceFragment(TasksListFragment.newInstance(), "MainFragment")
                 }
+            } else if (event == Lifecycle.Event.ON_RESUME) {
+                replaceFragment(TasksListFragment.newInstance(), "MainFragment")
             }
+
         })
 
 
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_settings, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+            R.id.settingsItem -> {
+                navController.navigate(R.id.action_mainFragment_to_settingsFragment)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun goToCreateActivity(fragmentValue: String) {
@@ -75,11 +99,11 @@ class MainFragment : Fragment(R.layout.fragment_main),
 //        })
     }
 
-    private fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment, tag: String) {
 
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragmentHolder, fragment)
+            .replace(R.id.fragmentHolder, fragment, tag)
             .commit()
 
     }

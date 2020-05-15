@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_margin="@dimen/item_margin_default"
-    android:background="@color/colorPrimaryDark"
+    android:background="?attr/colorPrimaryDark"
     android:elevation="@dimen/elevation_default">
 
     <TextView
@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/item_margin_small"
         android:layout_marginBottom="@dimen/item_margin_small"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="?attr/primaryTextColor"
         android:textSize="@dimen/text_size_large"
         tools:text="TextView"
         android:text="@string/add_button_task"/>

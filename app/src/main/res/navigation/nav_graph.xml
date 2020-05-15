@@ -17,8 +17,11 @@
         <action
             android:id="@+id/action_mainFragment_to_createFragment"
             app:destination="@id/createFragment" />
-    </fragment>
 
+        <action
+            android:id="@+id/action_mainFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/createFragment"
@@ -28,6 +31,11 @@
 
         <argument android:name="fragment_type_key"
             android:defaultValue="f_v_t"/>
-
     </fragment>
+
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.notes.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>
