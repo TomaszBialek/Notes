@@ -22,12 +22,16 @@
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+
+        <action
+            android:id="@+id/action_mainFragment_to_mapsActivity"
+            app:destination="@id/mapsActivity" />
     </fragment>
 
     <fragment
         android:id="@+id/createFragment"
         android:name="com.example.notes.create.CreateFragment"
-        android:label="activity_create"
+        android:label="fragment_create"
         tools:layout="@layout/fragment_create">
 
         <argument android:name="fragment_type_key"
@@ -38,5 +42,13 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.notes.settings.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings"/>
+
+    <activity
+        android:id="@+id/mapsActivity"
+        android:name="com.example.notes.maps.MapsActivity"
+        android:label="activity_maps"
+        tools:layout="@layout/activity_maps" />
+
 </navigation>

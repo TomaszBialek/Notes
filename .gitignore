@@ -12,3 +12,7 @@
 /captures
 .externalNativeBuild
 .cxx
+key/
+libs/
+src/release/
+src/debug/

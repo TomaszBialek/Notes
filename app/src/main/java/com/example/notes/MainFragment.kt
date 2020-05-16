@@ -1,15 +1,14 @@
 package com.example.notes
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.notes.maps.MapsFragment
 import com.example.notes.notes.NoteListFragment
 import com.example.notes.tasks.TasksListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,8 +20,7 @@ class MainFragment : Fragment(R.layout.fragment_main),
     lateinit var navController: NavController
     var firstEnter = true
 
-    private var mOnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private var mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_tasks -> {
                     replaceFragment(TasksListFragment.newInstance())
@@ -32,13 +30,13 @@ class MainFragment : Fragment(R.layout.fragment_main),
                     replaceFragment(NoteListFragment.newInstance())
                     return@OnNavigationItemSelectedListener true
                 }
+                R.id.navigation_map -> {
+                    replaceFragment(MapsFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
             }
-            false
+        false
         }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

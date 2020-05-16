@@ -24,13 +24,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         theme_switcher.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-               sharedPref.edit().putString("current_theme", "white").apply()
-//                requireActivity().setTheme(R.style.AppThemeWhite)
-                //recreate(requireActivity())
+                sharedPref.edit().putString("current_theme", "white").apply()
+//                recreate(requireActivity())
             } else {
                 sharedPref.edit().putString("current_theme", "dark").apply()
+//                requireActivity().theme.applyStyle(R.style.AppThemeDark, true)
 //                requireActivity().setTheme(R.style.AppThemeDark)
-                //recreate(requireActivity())
+//                recreate(requireActivity())
             }
             requireActivity().runOnUiThread {
                 Toast.makeText(context, R.string.toast_changed_theme, Toast.LENGTH_SHORT).show()
