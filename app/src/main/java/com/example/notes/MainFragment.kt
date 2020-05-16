@@ -1,5 +1,6 @@
 package com.example.notes
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
@@ -24,30 +25,28 @@ class MainFragment : Fragment(R.layout.fragment_main),
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_tasks -> {
-                    replaceFragment(TasksListFragment.newInstance(), "MainFragment")
+                    replaceFragment(TasksListFragment.newInstance())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_notes -> {
-                    replaceFragment(NoteListFragment.newInstance(), "MainFragment")
+                    replaceFragment(NoteListFragment.newInstance())
                     return@OnNavigationItemSelectedListener true
                 }
             }
             false
         }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        var aa : String?
-
-        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("key")?.observe(viewLifecycleOwner, Observer {
-            result -> aa = result
-        })
-
         if (firstEnter)
         {
-            replaceFragment(TasksListFragment.newInstance(), "MainFragment")
+            replaceFragment(TasksListFragment.newInstance())
             firstEnter = false
         }
 
@@ -56,12 +55,12 @@ class MainFragment : Fragment(R.layout.fragment_main),
             if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains("key")) {
                 val result = navBackStackEntry.savedStateHandle.get<String>("key")
                 if (result == "backPressedNote") {
-                    replaceFragment(NoteListFragment.newInstance(), "MainFragment")
+                    replaceFragment(NoteListFragment.newInstance())
                 } else {
-                    replaceFragment(TasksListFragment.newInstance(), "MainFragment")
+                    replaceFragment(TasksListFragment.newInstance())
                 }
             } else if (event == Lifecycle.Event.ON_RESUME) {
-                replaceFragment(TasksListFragment.newInstance(), "MainFragment")
+                replaceFragment(TasksListFragment.newInstance())
             }
 
         })
@@ -99,11 +98,11 @@ class MainFragment : Fragment(R.layout.fragment_main),
 //        })
     }
 
-    private fun replaceFragment(fragment: Fragment, tag: String) {
+    private fun replaceFragment(fragment: Fragment) {
 
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragmentHolder, fragment, tag)
+            .replace(R.id.fragmentHolder, fragment)
             .commit()
 
     }

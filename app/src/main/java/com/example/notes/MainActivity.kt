@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
 
@@ -23,8 +24,6 @@ class MainActivity : AppCompatActivity() {
             setTheme(R.style.AppThemeWhite)
         else
             setTheme(R.style.AppThemeDark)
-
-        setContentView(R.layout.activity_main)
     }
 
     override fun onResume() {
