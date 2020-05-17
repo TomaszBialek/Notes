@@ -26,6 +26,7 @@
         app:itemIconTint="@color/navigation_selector"
         app:itemTextColor="@color/navigation_selector"
         app:itemBackground="@android:color/transparent"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintTop_toBottomOf="@id/fragmentHolder"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

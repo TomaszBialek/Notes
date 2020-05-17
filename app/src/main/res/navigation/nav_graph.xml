@@ -23,9 +23,6 @@
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
 
-        <action
-            android:id="@+id/action_mainFragment_to_mapsActivity"
-            app:destination="@id/mapsActivity" />
     </fragment>
 
     <fragment
@@ -44,11 +41,5 @@
         android:name="com.example.notes.settings.SettingsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/fragment_settings"/>
-
-    <activity
-        android:id="@+id/mapsActivity"
-        android:name="com.example.notes.maps.MapsActivity"
-        android:label="activity_maps"
-        tools:layout="@layout/activity_maps" />
 
 </navigation>

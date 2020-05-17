@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.notes.maps.MapsFragment
 import com.example.notes.notes.NoteListFragment
 import com.example.notes.tasks.TasksListFragment
+import com.example.notes.weather.WeatherFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -35,6 +36,10 @@ class MainFragment : Fragment(R.layout.fragment_main),
                 }
                 R.id.navigation_map -> {
                     requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_weather -> {
+                    replaceFragment(WeatherFragment())
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -76,6 +81,10 @@ class MainFragment : Fragment(R.layout.fragment_main),
                     }
                     "backPressedMap" -> {
                         replaceFragment(MapsFragment())
+                        navBackStackEntry.savedStateHandle.remove<String>("key")
+                    }
+                    "backPressedWeather" -> {
+                        replaceFragment(WeatherFragment())
                         navBackStackEntry.savedStateHandle.remove<String>("key")
                     }
                 }
