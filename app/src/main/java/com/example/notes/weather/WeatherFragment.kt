@@ -1,14 +1,19 @@
 package com.example.notes.weather
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.notes.R
+import com.example.notes.foundations.GPSUtils
 import com.example.notes.models.Weather
 import com.example.notes.retrofit.WeatherService
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_weather.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -23,14 +28,37 @@ import java.io.IOException
 class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
     lateinit var weatherService: WeatherService
+    lateinit var currentLatLng: LatLng
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         findNavController().previousBackStackEntry?.savedStateHandle?.set("key", "backPressedMap")
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when(requestCode) {
+            GPSUtils.REQUEST_LOCATION -> {
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    currentLatLng = GPSUtils.instance.latLng
+                    getData()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        GPSUtils.instance.findDeviceLocation(requireActivity())
+        currentLatLng = GPSUtils.instance.latLng
 
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -48,20 +76,20 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
         weatherService = retrofit.create(WeatherService::class.java)
 
-        getData()
+        if (currentLatLng != null) getData()
     }
 
     private fun getData() {
         val parameters = mutableMapOf(
-            "lat" to "33.441792",
-            "lon" to "-94.037689",
+            "lat" to currentLatLng.latitude.toString(),
+            "lon" to currentLatLng.longitude.toString(),
             "exclude" to arrayListOf("minutely", "hourly", "daily").joinToString(","),
             "appId" to getString(R.string.open_weather_map_key)
         )
 
         val call = weatherService.getCurrentWeather(
-            "33.441792",
-            "-94.037689",
+            currentLatLng.latitude.toString(),
+            currentLatLng.longitude.toString(),
             arrayListOf("minutely", "hourly", "daily").joinToString(","),
             getString(R.string.open_weather_map_key)
         )
