@@ -23,4 +23,9 @@
     <string name="toast_error_saving">Error! Could not save!</string>
     <string name="toast_changed_theme">Run again app to apply changes!</string>
     <string name="change_app_theme">Change app theme</string>
+    <string name="map_type_none">None</string>
+    <string name="map_type_normal">Normal</string>
+    <string name="map_type_satellite">Satellite</string>
+    <string name="map_type_terrain">Terrain</string>
+    <string name="map_type_hybrid">Hybrid</string>
 </resources>

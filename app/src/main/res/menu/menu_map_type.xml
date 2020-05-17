@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/map_type_none"
+        android:title="@string/map_type_none"
+        android:iconTint="?attr/primaryTextColor"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/map_type_normal"
+        android:title="@string/map_type_normal"
+        android:iconTint="?attr/primaryTextColor"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/map_type_satellite"
+        android:title="@string/map_type_satellite"
+        android:iconTint="?attr/primaryTextColor"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/map_type_terrain"
+        android:title="@string/map_type_terrain"
+        android:iconTint="?attr/primaryTextColor"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/map_type_hybrid"
+        android:title="@string/map_type_hybrid"
+        android:iconTint="?attr/primaryTextColor"
+        app:showAsAction="always"/>
+
+</menu>

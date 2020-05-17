@@ -1,5 +1,7 @@
 package com.example.notes
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
@@ -8,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.notes.maps.MapsFragment
 import com.example.notes.notes.NoteListFragment
 import com.example.notes.tasks.TasksListFragment
@@ -31,12 +34,23 @@ class MainFragment : Fragment(R.layout.fragment_main),
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_map -> {
-                    replaceFragment(MapsFragment())
+                    requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
                     return@OnNavigationItemSelectedListener true
                 }
             }
         false
         }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if(permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    replaceFragment(MapsFragment())
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,16 +65,21 @@ class MainFragment : Fragment(R.layout.fragment_main),
         val navBackStackEntry = navController.currentBackStackEntry!!
         navBackStackEntry.lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains("key")) {
-                val result = navBackStackEntry.savedStateHandle.get<String>("key")
-                if (result == "backPressedNote") {
-                    replaceFragment(NoteListFragment.newInstance())
-                } else {
-                    replaceFragment(TasksListFragment.newInstance())
+                when (navBackStackEntry.savedStateHandle.get<String>("key")) {
+                    "backPressedNote" -> {
+                        replaceFragment(NoteListFragment.newInstance())
+                        navBackStackEntry.savedStateHandle.remove<String>("key")
+                    }
+                    "backPressedList" -> {
+                        replaceFragment(TasksListFragment.newInstance())
+                        navBackStackEntry.savedStateHandle.remove<String>("key")
+                    }
+                    "backPressedMap" -> {
+                        replaceFragment(MapsFragment())
+                        navBackStackEntry.savedStateHandle.remove<String>("key")
+                    }
                 }
-            } else if (event == Lifecycle.Event.ON_RESUME) {
-                replaceFragment(TasksListFragment.newInstance())
             }
-
         })
 
 
@@ -113,5 +132,7 @@ class MainFragment : Fragment(R.layout.fragment_main),
         const val FRAGMENT_TYPE_KEY = "f_t_k"
         const val FRAGMENT_VALUE_NOTE = "f_v_n"
         const val FRAGMENT_VALUE_TASK = "f_v_t"
+
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 }
