@@ -10,15 +10,24 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.notes.R
+import com.example.notes.application.NoteApplication
 import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.IOException
 
 
@@ -32,6 +41,9 @@ class MapsFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback, Googl
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
 
+    private lateinit var placesClient: PlacesClient
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -41,11 +53,9 @@ class MapsFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback, Googl
                 super.onLocationResult(p0)
 
                 lastLocation = p0.lastLocation
-                placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude))
+                placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude), true)
             }
         }
-
-//        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
 
         createLocationRequest()
     }
@@ -85,41 +95,77 @@ class MapsFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback, Googl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         findNavController().previousBackStackEntry?.savedStateHandle?.set("key", "backPressedMap")
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+
+        val autocompleteFragment = childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
+        autocompleteFragment.setCountry("PL")
+        autocompleteFragment.setPlaceFields(mutableListOf(Place.Field.ID, Place.Field.ADDRESS, Place.Field.NAME, Place.Field.LAT_LNG))
+
+        childFragmentManager.beginTransaction().apply {
+            hide(autocompleteFragment)
+            commit()
+        }
+
+        if (!Places.isInitialized()) {
+            Places.initialize(NoteApplication.instance.applicationContext, getString(R.string.google_maps_key))
+        }
+
+        placesClient = Places.createClient(requireContext())
+
+        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(place: Place) {
+                place.latLng?.let {
+                    placeMarkerOnMap(it, false)
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 15.0f))
+                }
+                Log.i(CLASS_NAME, "Place: " + place.name + ", " + place.id)
+            }
+
+            override fun onError(p0: Status) {
+                Log.i(CLASS_NAME, "An error occurred: $p0")
+            }
+        })
+
+        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+            loadPlacePicker()
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-
-        map.uiSettings.isZoomControlsEnabled = true
-        map.setOnMarkerClickListener(this)
-        map.isMyLocationEnabled = true
-        map.isIndoorEnabled = true
+        map = googleMap.apply {
+            uiSettings.isZoomControlsEnabled = true
+            setOnMarkerClickListener(this@MapsFragment)
+            isMyLocationEnabled = true
+            isIndoorEnabled = true
+        }
 
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
-                placeMarkerOnMap(currentLatLng)
+                placeMarkerOnMap(currentLatLng, true)
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15.0f))
             }
         }
     }
 
     private fun createLocationRequest() {
-        locationRequest = LocationRequest()
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 5000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest = LocationRequest().apply {
+            interval = 10_000
+            fastestInterval = 5_000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
 
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
 
         val client = LocationServices.getSettingsClient(requireContext())
         val task = client.checkLocationSettings(builder.build())
 
-        // 5
         task.addOnSuccessListener {
             locationUpdateState = true
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
@@ -128,7 +174,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback, Googl
             if (e is ResolvableApiException) {
                 try {
                     e.startResolutionForResult(requireActivity(), REQUEST_CHECK_SETTINGS)
-                } catch (sendEx: IntentSender.SendIntentException) { }
+                } catch (sendEx: IntentSender.SendIntentException) {
+                }
             }
         }
     }
@@ -146,10 +193,12 @@ class MapsFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback, Googl
     override fun onPause() {
         super.onPause()
         fusedLocationClient.removeLocationUpdates(locationCallback)
+        locationUpdateState = false
     }
 
     override fun onResume() {
         super.onResume()
+
         if (!locationUpdateState) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
         }
@@ -175,17 +224,43 @@ class MapsFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback, Googl
     }
 
 
-    private fun placeMarkerOnMap(location: LatLng) {
-        val markerOptions = MarkerOptions().position(location)
+    private fun placeMarkerOnMap(location: LatLng, isUser: Boolean) {
 
-        val titleStr = getAddress(location)
-        markerOptions.title(titleStr)
+        val markerOptions =
+            if (isUser) {
+                MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+            } else {
+                MarkerOptions()
+            }.apply {
+                position(location)
+                val titleAddress = getAddress(location)
+                title(titleAddress)
+            }
 
         map.addMarker(markerOptions)
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         return false
+    }
+
+    private fun loadPlacePicker() {
+        val autocompleteFragment = childFragmentManager.findFragmentById(R.id.autocomplete_fragment)
+
+        if (autocompleteFragment != null) {
+            if (autocompleteFragment.isHidden) {
+                childFragmentManager
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                    .show(autocompleteFragment)
+                    .commit()
+            } else {
+                childFragmentManager
+                    .beginTransaction()
+                    .hide(autocompleteFragment)
+                    .commit()
+            }
+        }
     }
 
     companion object {

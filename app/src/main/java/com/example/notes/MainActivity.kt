@@ -36,4 +36,20 @@ class MainActivity : AppCompatActivity() {
         if (currentTheme != theme)
             recreate()
     }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        Log.d(CLASS_NAME, "onActivityResult: [From Activity]:  $requestCode, $resultCode")
+//        val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+//        if(navHostFragment != null) {
+//            val childFragments = navHostFragment.childFragmentManager.fragments
+//            childFragments.forEach { fragment ->
+//                fragment.onActivityResult(requestCode, resultCode, data)
+//            }
+//        }
+//    }
+
+    companion object {
+        const val CLASS_NAME = "MainActivity"
+    }
 }
