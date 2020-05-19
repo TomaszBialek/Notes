@@ -5,10 +5,10 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface WeatherService {
+interface WeatherApi {
 
     @GET("onecall")
-    fun getCurrentWeather(
+    fun getWeather(
         @Query("lat") latitude: String,
         @Query("lon") longitude: String,
         @Query("exclude") exclude: String,

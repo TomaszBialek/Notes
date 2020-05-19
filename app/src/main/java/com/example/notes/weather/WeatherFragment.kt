@@ -1,7 +1,5 @@
 package com.example.notes.weather
 
-import android.annotation.SuppressLint
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -12,37 +10,45 @@ import androidx.navigation.fragment.findNavController
 import com.example.notes.R
 import com.example.notes.foundations.GPSUtils
 import com.example.notes.models.Weather
-import com.example.notes.retrofit.WeatherService
+import com.example.notes.retrofit.WeatherApi
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_weather.*
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
+import java.util.*
 
 class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
-    lateinit var weatherService: WeatherService
+    lateinit var weatherService: WeatherApi
     lateinit var currentLatLng: LatLng
+
+    lateinit var weatherViewModel: WeatherViewModel
+//    val weathersList = arrayListOf<Weather>()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         findNavController().previousBackStackEntry?.savedStateHandle?.set("key", "backPressedMap")
+
+//        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+//        weatherViewModel.weatherLiveData.observe(viewLifecycleOwner, Observer { weather ->
+//            weathersList.clear()
+//            weathersList.add(weather)
+//        })
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        when(requestCode) {
+        when (requestCode) {
             GPSUtils.REQUEST_LOCATION -> {
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     currentLatLng = GPSUtils.instance.latLng
-                    getData()
+                    getCurrentWeather()
                 }
             }
         }
@@ -74,12 +80,12 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
             .client(okHttpClient)
             .build()
 
-        weatherService = retrofit.create(WeatherService::class.java)
+        weatherService = retrofit.create(WeatherApi::class.java)
 
-        if (currentLatLng != null) getData()
+        if (currentLatLng != null) getCurrentWeather()
     }
 
-    private fun getData() {
+    private fun getCurrentWeather() {
         val parameters = mutableMapOf(
             "lat" to currentLatLng.latitude.toString(),
             "lon" to currentLatLng.longitude.toString(),
@@ -87,31 +93,57 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
             "appId" to getString(R.string.open_weather_map_key)
         )
 
-        val call = weatherService.getCurrentWeather(
+        val call = weatherService.getWeather(
             currentLatLng.latitude.toString(),
             currentLatLng.longitude.toString(),
-            arrayListOf("minutely", "hourly", "daily").joinToString(","),
+            arrayListOf("minutely", "daily").joinToString(","),
             getString(R.string.open_weather_map_key)
         )
 
-        call.enqueue(object : Callback<Weather>{
+        call.enqueue(object : Callback<Weather> {
             override fun onFailure(call: Call<Weather>, t: Throwable) {
-                textViewResult.text = t.message
+                currentWeatherResult.text = t.message
                 Log.d("onFailure", t.toString())
             }
 
             override fun onResponse(call: Call<Weather>, response: retrofit2.Response<Weather>) {
                 if (!response.isSuccessful) {
-                    textViewResult.text = "Code: ${response.code()}"
+                    currentWeatherResult.text = "Code: ${response.code()}"
                     return
                 }
 
                 val currentWeather = response.body()
 
                 currentWeather?.let {
-                    var content = "Clouds: ${it.current.clouds}"
+                    val current = it.current
 
-                    textViewResult.append(content.toString())
+                    val date = Date(current.dt * 1000)
+
+                    val temp = String.format("%.2f", current.temp - 273.15)
+                    val feels_like = String.format("%.2f", current.feels_like - 273.15)
+
+
+                    var currentText =
+                        "Date: ${date.toString().substringBefore("GMT")} -> Temp: $temp (feels like: $feels_like), Humidity: ${current.humidity}%, Description: ${current.weather[0].description}"
+
+                    currentWeatherResult.text = currentText;
+
+                    val hourly = it.hourly
+
+                    var hourlyText = ""
+
+                    for (x in hourly.indices step 3) {
+
+                        val hour = hourly[x]
+
+                        val date = Date(hour.dt * 1000)
+                        val temp = String.format("%.2f", hour.temp - 273.15)
+                        val feels_like = String.format("%.2f", hour.feels_like - 273.15)
+
+                        hourlyText += "Date: ${date.toString().substringBefore("GMT")} -> Temp: $temp (feels like: $feels_like), Humidity: ${hour.humidity}%, Description: ${hour.weather[0].description}\n";
+                    }
+
+                    hourlyWeatherResult.text = hourlyText
                 }
 
             }

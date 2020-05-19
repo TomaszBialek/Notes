@@ -4,7 +4,8 @@ data class Weather (
     var lat: Double,
     var lon: Double,
     var timezone: String,
-    var current: Current
+    var current: Current,
+    var hourly: List<Current>
 )
 
 data class Current (
