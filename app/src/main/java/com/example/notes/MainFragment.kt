@@ -87,6 +87,10 @@ class MainFragment : Fragment(R.layout.fragment_main),
                         replaceFragment(WeatherFragment())
                         navBackStackEntry.savedStateHandle.remove<String>("key")
                     }
+                    "backPressedSettings" -> {
+                        replaceFragment(NoteListFragment.newInstance())
+                        navBackStackEntry.savedStateHandle.remove<String>("key")
+                    }
                 }
             }
         })
@@ -128,6 +132,7 @@ class MainFragment : Fragment(R.layout.fragment_main),
 
         requireActivity().supportFragmentManager
             .beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
             .replace(R.id.fragmentHolder, fragment)
             .commit()
 
