@@ -7,8 +7,10 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notes.R
 import com.example.notes.foundations.GPSUtils
+import com.example.notes.models.Current
 import com.example.notes.models.Weather
 import com.example.notes.retrofit.WeatherApi
 import com.google.android.gms.maps.model.LatLng
@@ -20,6 +22,7 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+import kotlin.collections.ArrayList
 
 class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
@@ -27,12 +30,19 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
     lateinit var currentLatLng: LatLng
 
     lateinit var weatherViewModel: WeatherViewModel
+
+    lateinit var adapter: WeatherAdapter
+
+
 //    val weathersList = arrayListOf<Weather>()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         findNavController().previousBackStackEntry?.savedStateHandle?.set("key", "backPressedMap")
+
+        hourlyWeatherResult.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        currentWeatherResult.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
 //        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 //        weatherViewModel.weatherLiveData.observe(viewLifecycleOwner, Observer { weather ->
@@ -71,7 +81,7 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
         }
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
+//            .addInterceptor(loggingInterceptor)
             .build()
 
         val retrofit = Retrofit.Builder()
@@ -102,13 +112,11 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
         call.enqueue(object : Callback<Weather> {
             override fun onFailure(call: Call<Weather>, t: Throwable) {
-                currentWeatherResult.text = t.message
                 Log.d("onFailure", t.toString())
             }
 
             override fun onResponse(call: Call<Weather>, response: retrofit2.Response<Weather>) {
                 if (!response.isSuccessful) {
-                    currentWeatherResult.text = "Code: ${response.code()}"
                     return
                 }
 
@@ -126,13 +134,19 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     var currentText =
                         "Date: ${date.toString().substringBefore("GMT")} -> Temp: $temp (feels like: $feels_like), Humidity: ${current.humidity}%, Description: ${current.weather[0].description}"
 
-                    currentWeatherResult.text = currentText;
+                    val curentList = ArrayList<Current>()
+                    curentList.add(current)
+
+                    val currentAdapter = WeatherAdapter(curentList)
+                    currentWeatherResult.adapter = currentAdapter
 
                     val hourly = it.hourly
 
                     var hourlyText = ""
 
-                    for (x in hourly.indices step 3) {
+                    val listName = ArrayList<Current>()
+
+                    for (x in 1 until hourly.size step 3 ) {
 
                         val hour = hourly[x]
 
@@ -140,10 +154,13 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                         val temp = String.format("%.2f", hour.temp - 273.15)
                         val feels_like = String.format("%.2f", hour.feels_like - 273.15)
 
-                        hourlyText += "Date: ${date.toString().substringBefore("GMT")} -> Temp: $temp (feels like: $feels_like), Humidity: ${hour.humidity}%, Description: ${hour.weather[0].description}\n";
+                        hourlyText = "Date: ${date.toString().substringBefore("GMT")} -> Temp: $temp (feels like: $feels_like), Humidity: ${hour.humidity}%, Description: ${hour.weather[0].description}"
+
+                        listName.add(hour)
                     }
 
-                    hourlyWeatherResult.text = hourlyText
+                    val hourlyAdapter = WeatherAdapter(listName)
+                    hourlyWeatherResult.adapter = hourlyAdapter
                 }
 
             }
