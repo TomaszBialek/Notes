@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notes.R
 import com.example.notes.models.Current
@@ -13,7 +14,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_weather.view.*
 import java.util.*
 
-class WeatherAdapter(private val items: List<Current>) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>(){
+class WeatherAdapter(val items: List<Current>) : RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>(){
 
     companion object {
         private const val ICON_URL = "http://openweathermap.org/img/w/"
@@ -49,5 +50,28 @@ class WeatherAdapter(private val items: List<Current>) : RecyclerView.Adapter<We
         val name: TextView = view.name
         val city: TextView = view.city
         val color: ImageView = view.color
+
+        init {
+            color.setOnClickListener { Log.d("TAG icon", items[layoutPosition].weather[0].icon ) }
+        }
+    }
+}
+
+class MyDiffCallback(
+    private val oldList: ArrayList<Current>,
+    private val newList: ArrayList<Current>
+) : DiffUtil.Callback() {
+
+    override fun getOldListSize() = oldList.size
+    override fun getNewListSize() = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int,
+                                 newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].dt == newList[newItemPosition].dt
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int,
+                                    newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].temp == newList[newItemPosition].temp
     }
 }

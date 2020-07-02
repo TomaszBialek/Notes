@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notes.R
 import com.example.notes.foundations.GPSUtils
@@ -161,6 +162,11 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
 
                     val hourlyAdapter = WeatherAdapter(listName)
                     hourlyWeatherResult.adapter = hourlyAdapter
+//                    (hourlyWeatherResult.layoutManager as LinearLayoutManager).stackFromEnd = true
+
+                    val swipeController = SwipeController(requireContext(), hourlyAdapter)
+                    val itemTouchhelper = ItemTouchHelper(swipeController)
+                    itemTouchhelper.attachToRecyclerView(hourlyWeatherResult)
                 }
 
             }

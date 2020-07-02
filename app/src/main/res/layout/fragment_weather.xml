@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,45 +8,50 @@
         android:id="@+id/currentWeatherResultText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/item_margin_small"
         android:layout_marginTop="@dimen/item_margin_default"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="@dimen/item_margin_small"
+        android:text="Current Weather"
         android:textSize="@dimen/text_size_large"
-        android:text="Current Weather" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/currentWeatherResult"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/item_margin_default"
-        android:layout_marginEnd="@dimen/item_margin_small"
         android:layout_marginTop="@dimen/item_margin_default"
+        android:layout_marginEnd="@dimen/item_margin_small"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentWeatherResultText"
-        android:textSize="@dimen/text_size_medium" />
+        app:layout_constraintTop_toBottomOf="@id/currentWeatherResultText" />
 
     <TextView
         android:id="@+id/hourlyWeatherResultText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/item_margin_default"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentWeatherResult"
+        android:text="Hourly Weather"
         android:textSize="@dimen/text_size_large"
-        android:text="Hourly Weather" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentWeatherResult" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hourlyWeatherResult"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/item_margin_default"
-        android:layout_marginEnd="@dimen/item_margin_small"
         android:layout_marginTop="@dimen/item_margin_default"
+        android:layout_marginEnd="@dimen/item_margin_small"
+        android:textSize="@dimen/text_size_medium"
+        android:fastScrollEnabled="true"
+        app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollHorizontalTrackDrawable="@drawable/track_drawable"
+        app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+        app:fastScrollVerticalTrackDrawable="@drawable/track_drawable"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hourlyWeatherResultText"
-        android:textSize="@dimen/text_size_medium" />
+        app:layout_constraintTop_toBottomOf="@id/hourlyWeatherResultText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
