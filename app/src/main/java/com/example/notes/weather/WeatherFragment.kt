@@ -2,13 +2,22 @@ package com.example.notes.weather
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.notes.R
 import com.example.notes.foundations.GPSUtils
 import com.example.notes.models.Current
@@ -50,6 +59,14 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
 //            weathersList.clear()
 //            weathersList.add(weather)
 //        })
+
+//        swipeRefresh.setOnRefreshListener {
+//            val list = getCurrentWeather()
+//            adapter.items.clear()
+//            adapter.items.addAll( list )
+//            adapter.notifyDataSetChanged()
+//            swipeRefresh.isRefreshing = false
+//        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -167,6 +184,44 @@ class WeatherFragment : Fragment(R.layout.fragment_weather) {
                     val swipeController = SwipeController(requireContext(), hourlyAdapter)
                     val itemTouchhelper = ItemTouchHelper(swipeController)
                     itemTouchhelper.attachToRecyclerView(hourlyWeatherResult)
+
+                    val adapterListener =  object : WeatherAdapter.AdapterListener {
+                        override fun startDragListener(viewHolder: RecyclerView.ViewHolder) {
+                            itemTouchhelper.startDrag(viewHolder)
+                        }
+                    }
+                    hourlyAdapter.setListener(adapterListener)
+
+                    val tracker: SelectionTracker<Long> = SelectionTracker.Builder<Long>(
+                        "selected",
+                        hourlyWeatherResult,
+                        StableIdKeyProvider(hourlyWeatherResult),
+                        MyItemDetailsLookup(hourlyWeatherResult),
+                        StorageStrategy.createLongStorage()
+                    ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
+                        .build()
+
+                    tracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
+                        override fun onSelectionChanged() {
+                            val nItems: Int? = tracker?.selection?.size()
+                            val colorToolbar: ColorDrawable
+                            val titleToolbar: String
+
+                            if(nItems != null && nItems > 0) {
+                                titleToolbar = "$nItems items selected"
+                                colorToolbar = ColorDrawable(Color.BLUE)
+                            } else {
+                                titleToolbar = "Nothing selected"
+                                colorToolbar = ColorDrawable(getColor(requireContext(), R.color.colorPrimary))
+                            }
+
+                            (activity as AppCompatActivity).supportActionBar?.title = titleToolbar
+                            (activity as AppCompatActivity).supportActionBar?.setBackgroundDrawable(colorToolbar)
+                        }
+                    })
+
+                    hourlyAdapter.setTracker(tracker)
+
                 }
 
             }

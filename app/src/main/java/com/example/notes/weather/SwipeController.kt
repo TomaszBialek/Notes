@@ -143,4 +143,8 @@ class SwipeController(
         if (icon != null && iconDest != null)
             c.drawBitmap(icon, null, iconDest, paint)
     }
+
+    override fun isLongPressDragEnabled(): Boolean {
+        return false
+    }
 }
